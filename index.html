@@ -1,1 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-to-Speech App</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+        }
+        
+        .list-group-item {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Daily Scenarios Text-to-Speech</h1>
+        <div class="list-group mt-4" id="sentence-list">
+            <!-- List of sentences will be dynamically added here -->
+        </div>
+    </div>
 
+    <script>
+        const sentences = [
+            { text: "Good morning!", voice: "young-male" },
+            { text: "How are you doing today?", voice: "young-male" },
+            // Add more sentences and responses here
+        ];
+
+        const sentenceList = document.getElementById('sentence-list');
+
+        sentences.forEach((sentence) => {
+            const button = document.createElement('button');
+            button.className = 'list-group-item list-group-item-action';
+            button.innerText = sentence.text;
+            button.addEventListener('click', () => speakText(sentence.text, sentence.voice));
+            sentenceList.appendChild(button);
+        });
+
+        function speakText(text, voice) {
+            const synth = window.speechSynthesis;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.voice = getVoiceByName(voice);
+            synth.speak(utterance);
+        }
+
+        function getVoiceByName(voiceName) {
+            const voices = window.speechSynthesis.getVoices();
+            return voices.find((voice) => voice.name === voiceName);
+        }
+
+        // Wait for the voices to be loaded before using them
+        window.speechSynthesis.onvoiceschanged = () => {
+            // You can remove this line if the voices do not change during the session
+        };
+    </script>
+</body>
+</html>
